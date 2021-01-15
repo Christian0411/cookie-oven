@@ -2,30 +2,28 @@
 
 document.addEventListener('DOMContentLoaded', async function() {
     var storedSrcDomain = await read('srcDomain')
+    if(storedSrcDomain.srcDomain)
     document.getElementById("srcDomain").value = storedSrcDomain.srcDomain;
 
     var copyButton = document.getElementById("copy");
-    
+    var currentTab = await getCurrentTab();
+
+    var targetDomain = new URL(currentTab.url).hostname;
+    document.getElementById("targetDomain").value = targetDomain;
+
+
     if(copyButton) {
     copyButton.addEventListener('click', async function() {
         var srcDomain = document.getElementById("srcDomain").value;
         await save('srcDomain', srcDomain);
         
-        chrome.cookies.getAll({domain:srcDomain}, (cookies) => {
-            chrome.tabs.query({
-                active: true,
-                currentWindow: true
-            }, function(tabs) {
-                // and use that tab to fill in out title and url
-                var tab = tabs[0];
-                var targetDomain = new URL(tab.url).hostname;
-                cookies.forEach((cookie) => {
-                    delete cookie["hostOnly"];
-                    delete cookie["session"];
-                    chrome.cookies.set({...cookie, domain: targetDomain, url: tab.url}, () => {})
-                    copyButton.innerHTML='Copied!';
-                })
-            });
+        chrome.cookies.getAll({domain:srcDomain}, (cookies) => {      
+            cookies.forEach((cookie) => {
+                delete cookie["hostOnly"];
+                delete cookie["session"];
+                chrome.cookies.set({...cookie, domain: targetDomain, url: currentTab.url}, () => {})
+                copyButton.innerHTML='Copied!';
+            })
         })
     }, false);
     }
@@ -44,6 +42,17 @@ function read(key) {
     });
 }
 
+
+function getCurrentTab() {
+    return new Promise((resolve, reject) => {
+    chrome.tabs.query({
+        active: true,
+        currentWindow: true
+    }, function(tabs) {
+        resolve(tabs[0])
+    });
+    })
+}
 
 function save(key, obj) {
     return new Promise((resolve, reject) => {
