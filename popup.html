@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!-- Compiled and minified CSS -->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="materialize/css/materialize.min.css"
+      media="screen,projection"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <title>Cookie Oven</title>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center"
+          ><img src="logo.png" class="logo"
+        /></a>
+      </div>
+    </nav>
+    <div class="content">
+      <div class="input-field">
+        <input
+          type="text"
+          class="validate"
+          id="srcDomain"
+          placeholder="google.com"
+        />
+        <label class="active" for="srcDomain">Source domain</label>
+      </div>
+      <!-- <input class="validate" id="targetDomain" />
+      <label class="active" for="targetDomain">Target domain</label> -->
+      <div class="input-field">
+        <input
+          disabled
+          type="text"
+          placeholder="google.com"
+          id="targetDomain"
+          value="localhost"
+        />
+        <label class="active" for="targetDomain">Target Domain</label>
+      </div>
+      <a id="copy" class="waves-effect waves-light btn">Copy Cookies</a>
+    </div>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script
+      type="text/javascript"
+      src="materialize/js/materialize.min.js"
+    ></script>
+  </body>
+  <script src="popup.js"></script>
+</html>

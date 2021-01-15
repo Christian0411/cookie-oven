@@ -1,0 +1,22 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  padding: 20px;
+}
+.domain {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
