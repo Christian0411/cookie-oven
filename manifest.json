@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Cookie Oven",
-    "version": "0.2",
+    "version": "1.0",
     "permissions": [
         "cookies",
         "tabs",
@@ -9,7 +9,6 @@
         "<all_urls>"
     ],
     "browser_action": {
-         "name": "Click to get URL", 
          "default_popup": "popup.html"
     }
 }

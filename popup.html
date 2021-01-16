@@ -30,7 +30,7 @@
         />
         <label class="active" for="srcDomain">Source domain</label>
       </div>
-      <div class="input-field">
+      <div class="input-field target-domain">
         <input
           disabled
           type="text"
@@ -40,9 +40,11 @@
         />
         <label class="active" for="targetDomain">Target Domain</label>
       </div>
+      <span id="helper-text" class="center helper hidden"
+        >This domain has no cookies</span
+      >
       <a id="copy" class="waves-effect waves-light btn">Copy Cookies</a>
     </div>
-
     <script src="jquery/jquery-3.5.1.min.js"></script>
     <script
       type="text/javascript"
