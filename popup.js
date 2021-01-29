@@ -4,6 +4,7 @@ var copyButton = document.getElementById("copy");
 var srcDomainInput = document.getElementById("srcDomain");
 var targetDomainInput = document.getElementById("targetDomain");
 var helperTextSpan = document.getElementById("helper-text");
+var clearCookiesInput = document.getElementById("clear");
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -11,23 +12,37 @@ document.addEventListener(
     var currentTab = await getCurrentTab();
 
     loadStoredDomains(currentTab);
+    loadStoredOptions();
 
-    copyButton.addEventListener(
-      "click",
-      async function () {
-        copyCookies(currentTab);
-      },
-      false
-    );
-
-    srcDomainInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        copyCookies(currentTab);
-      }
-    });
+    handleCopyButtonClick(currentTab);
+    handleSourceDomainEnter(currentTab);
   },
   false
 );
+
+function handleCopyButtonClick(currentTab) {
+  copyButton.addEventListener(
+    "click",
+    async function () {
+      copyCookies(currentTab);
+    },
+    false
+  );
+}
+
+function handleSourceDomainEnter(currentTab) {
+  srcDomainInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      copyCookies(currentTab);
+    }
+  });
+}
+
+async function loadStoredOptions(currentTab) {
+  var storedClearOption = await read("clearOption");
+  if (storedClearOption.checked)
+    clearCookiesInput.value = storedClearOption.checked;
+}
 
 async function loadStoredDomains(currentTab) {
   var storedSrcDomain = await read("srcDomain");
@@ -37,14 +52,17 @@ async function loadStoredDomains(currentTab) {
   var targetDomain = new URL(currentTab.url).hostname;
   targetDomainInput.value = targetDomain;
 }
+
 var timer;
 var warningTimer;
 var errorTimer;
 async function copyCookies(currentTab) {
   var srcDomain = srcDomainInput.value;
   await save("srcDomain", srcDomain);
-
   var targetDomain = new URL(currentTab.url).hostname;
+
+  if (clearCookiesInput.checked) clearCookies(targetDomain);
+
   chrome.cookies.getAll({ domain: srcDomain }, (cookies) => {
     if (cookies.length === 0) {
       helperTextSpan.innerHTML = "This domain has no cookies";
@@ -102,6 +120,18 @@ function read(key) {
     } else {
       reject(null);
     }
+  });
+}
+
+function clearCookies(domain) {
+  chrome.cookies.getAll({ domain: domain }, (cookies) => {
+    cookies.forEach((cookie) => {
+      var domain = cookie.domain;
+      chrome.cookies.remove(
+        { url: `https://${domain}${cookie.path}`, name: cookie.name },
+        () => {}
+      );
+    });
   });
 }
 
